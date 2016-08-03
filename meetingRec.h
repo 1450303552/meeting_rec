@@ -17,6 +17,12 @@ class Rec{
 		string remind;
 	public:
 		string situation; 
+		void renew_situaiton(){
+			Time temp;
+			if (temp<begin_t) situation = "未完成";
+			else if (temp>end_t) situation = "已完成";
+			else situation = "进行中";
+		}
 		Rec(string n, string ad, Time bt, Time et, string r){
 			name = n;
 			address = ad;
@@ -24,22 +30,44 @@ class Rec{
 			end_t = et;
 			remind = r;
 			
-			Time temp;
-			if (temp<bt) situation = "未完成";
-			else if (temp>et) situation = "已完成";
-			else situation = "进行中";
+            Time temp;
+            renew_situaiton();
 		}
 		Rec(){
 		}
 		bool is_today(){
-			return begin_t.is_today();
+			if (begin_t.is_today()) return true;
+			else if (end_t.is_today()) return true;
+			else {
+				Time now;
+				if (now>begin_t&&end_t>now) return true;
+				return false;
+			}
 		}
-		string short_of(){
+		string for_short(){
 			ostringstream s;
-			s<<begin_t.watch_time()<<"-"<<end_t.watch_time()<<" "
+			
+			
+			s<<setw(23)<<" "
+			 <<setfill('_')<<setw(30)<<"_"
+			 <<setfill(' ')<<endl;
+
+			s<<setw(25)<<"["+situation+"] ";
+
+			s<<begin_t.watch_time()<<"-"<<end_t.watch_time()<<" | "
 			 <<name<<"(add:"<<address<<") "
-			 <<"注:"<<remind;
+			 <<"\n"<<setw(39)<<" | "<<"注:"<<remind;
 			 
+			return s.str();
+		}
+		string print_line(){
+			ostringstream s;
+			s<<name<<" "<<address<<" "
+			 <<begin_t.print_time()<<" "
+			 <<end_t.print_time()<<" "
+			 <<remind<<" "
+			 <<situation;
+
 			return s.str();
 		}
 };
@@ -51,10 +79,7 @@ ostream &operator<<(ostream &output, Rec rec){
 
 istream &operator>>(istream &input, Rec &rec){
 	input>>rec.name>>rec.address>>rec.begin_t>>rec.end_t>>rec.remind;
-	Time temp;
-	if (temp<rec.begin_t) rec.situation = "未完成";
-		else if (temp>rec.end_t) rec.situation = "已完成";
-		else rec.situation = "进行中";
+	rec.renew_situaiton();
 	return input;
 }
 #endif

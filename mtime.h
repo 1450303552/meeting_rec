@@ -20,6 +20,7 @@ class Time{
 		Time();
 		string watch_time();
 		bool is_today();
+		string print_time();
 };
 
 //Time相关函数 
@@ -42,15 +43,19 @@ bool Time::is_today(){
 	Time now;
 	return (now.year==year&&now.month==month&&now.day==day);
 }
-ostream &operator<<(ostream &output, Time t){		//时间输出 
-	output<<right<<setfill('0')<<setw(4)<<t.year<<'/'<<setw(2)<<t.month<<'/'<<setw(2)<<t.day<<' ';
-	output<<right<<setfill('0')<<setw(2)<<t.hour<<':'<<setw(2)<<t.minute;//<<':'<<setw(2)<<t.second;
-	output<<setfill(' ');
+string Time::print_time(){
+	ostringstream s;
+	s<<right<<setw(4)<<year<<setfill('0')<<'/'<<setw(2)<<month<<'/'<<setw(2)<<day<<' ';
+	s<<right<<setfill('0')<<setw(2)<<hour<<':'<<setw(2)<<minute;//<<':'<<setw(2)<<t.second;
+	s<<setfill(' ');
+	return s.str();
+}
+ostream &operator<<(ostream &output, Time t){		//时间输出
+	output<<t.year<<' '<<t.month<<' '<<t.day<<' '<<t.hour<<' '<<t.minute;
 	return output;
 }
-istream &operator>>(istream &input, Time &t){		//时间输入 
-	char k;
-	input>>t.year>>k>>t.month>>k>>t.day>>k>>t.hour>>k>>t.minute;//>>k>>t.second;
+istream &operator>>(istream &input, Time &t){		//时间输入
+	input>>t.year>>t.month>>t.day>>t.hour>>t.minute;//>>k>>t.second;
 	return input;
 }
 bool operator==(Time t1, Time t2){

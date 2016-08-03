@@ -127,10 +127,8 @@ int m_get_order(){
 
 void m_print(int m){ 
 	Time now_time;
-	ostringstream s;
-	s<<now_time;
     cout<<left<<setw(40)<<">Ö÷Ò³"
-    	<<right<<setw(40)<<s.str()+" "
+    	<<right<<setw(40)<<now_time.print_time()+" "
 		<<endl
   	    <<setfill('-')<<setw(80)<<"-"
 		<<setfill(' ')
@@ -168,10 +166,8 @@ void m_print(int m){
 
 void log_desk(){	
     Time now_time;
-	ostringstream s;
-	s<<now_time;
     cout<<left<<setw(40)<<">Ö÷Ò³>µÇÂ¼"
-    	<<right<<setw(40)<<s.str()+" " 
+    	<<right<<setw(40)<<now_time.print_time()+" "
 		<<endl 
     	<<setfill('-')<<setw(80)<<"-"
 		<<setfill(' ')
@@ -205,10 +201,8 @@ int log_search(string id, string code){
 
 void register_desk(){
     Time now_time;
-	ostringstream s;
-	s<<now_time;
     cout<<left<<setw(40)<<">Ö÷Ò³>×¢²á"
-    	<<right<<setw(40)<<s.str()+" " 
+    	<<right<<setw(40)<<now_time.print_time()+" "
 		<<endl 
     	<<setfill('-')<<setw(80)<<"-"
 		<<setfill(' ')

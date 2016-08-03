@@ -43,31 +43,45 @@ class User{
 			return false;
 		}
 		void show_today(){
-			cout<<setfill('+')<<setw(80)<<"+"
-				<<setfill(' ')<<endl;
-
-			cout<<"+"<<setw(79)<<"+"<<endl;
+			cout<<endl;
 			
+			int mark = 0;
 			for(vector<Rec>::iterator i = reclist.begin(); i!=reclist.end();i++){
+				i->renew_situaiton();
 				if(i->is_today()){
-					cout<<"+    "
-						<<left<<setw(70)<<i->short_of()<<right
-						<<"    +"<<endl;
+					mark = 1;
 					
-					cout<<"+"<<setw(79)<<"+"<<endl;
+					cout<<i->for_short()
+						<<endl;
 				}
 			}
+			if (mark==0){
+				/*cout<<endl
+					<<setw(23)<<" "
+					<<setfill('_')<<setw(30)<<"_"
+					<<setfill(' ')<<endl;*/
+				cout<<endl<<setw(23)<<" "
+					<<":今天没有会议，好好休息休息或者下班后去勾搭勾搭妹纸^3^！\n\n\n";
+			}
+			else {
+				/*cout<<endl
+					<<setw(23)<<" "
+					<<setfill('-')<<setw(30)<<"-"
+					<<setfill(' ')<<endl;*/
+				cout<<endl<<setw(23)<<" "
+					<<":感觉，身体被掏空_(:3J<)_！MDZZ！\n\n\n";
+			}
 			
-			cout<<setfill('+')<<setw(80)<<"+"
-				<<setfill(' ')<<endl;
+			/*cout<<setw(23)<<" "
+				<<setfill('-')<<setw(30)<<"-"
+				<<setfill(' ')<<endl;*/
 		}
 		void u_print(int m){
 			Time now_time;
-			ostringstream s, t;
-			t<<now_time;
+			ostringstream s;
 			s<<">主页>登录> "<<id<<" 个人主页";
     		cout<<left<<setw(40)<<s.str()
-    			<<right<<setw(40)<<t.str()+" " 
+    			<<right<<setw(40)<<now_time.print_time()+" "
 				<<endl
 				<<setfill('-')<<setw(80)<<"-"
 				<<setfill(' ')
@@ -79,7 +93,7 @@ class User{
 				case 1:{ cout<<"＞ｏ＜"; break;}
 				case 2:{ cout<<"o＿O"; break;}
 			}
-			cout<<" =--"<<endl<<endl;
+			cout<<" =--"<<endl;
 			
 			show_today();
 			
@@ -104,15 +118,14 @@ class User{
 				<<setfill('_')<<setw(30)<<"_"
 				<<setfill(' ')<<endl;		
 		
-			cout<<setw(23)<<" "<<"注：按方向键移动选择，按Enter键确认操作"; 
+			cout<<setw(23)<<" "<<"注：上下方向键控制选择，按Enter键确认操作";
 		}
 		void new_rec(){
 			Time now_time;
-			ostringstream s, t;
-			t<<now_time;
+			ostringstream s;
 			s<<">主页>登录>"<<id<<"个人主页>新会议记录";
     		cout<<left<<setw(40)<<s.str()
-    			<<right<<setw(40)<<t.str()+" " 
+	            <<right<<setw(40)<<now_time.print_time()+" "
 				<<endl
 				<<setfill('-')<<setw(80)<<"-"
 				<<setfill(' ')
@@ -140,18 +153,17 @@ class User{
 		}
 		void check_rec(){
 			Time now_time;
-			ostringstream s, t;
-			t<<now_time;
+			ostringstream s;
 			s<<">主页>登录>"<<id<<"个人主页>查看记录";
     		cout<<left<<setw(40)<<s.str()
-    			<<right<<setw(40)<<t.str()+" " 
+    			<<right<<setw(40)<<now_time.print_time()+" "
 				<<endl
 				<<setfill('-')<<setw(80)<<"-"
 				<<setfill(' ')
 				<<endl;
 				
 			for(vector<Rec>::iterator i = reclist.begin(); i!=reclist.end(); i++){
-				cout<<*i<<" "<<i->situation<<endl; 
+				cout<<i->print_line()<<endl;
 			}
 			char t_c=getch();
 		}
