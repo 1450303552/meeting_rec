@@ -48,15 +48,17 @@ class Rec{
 			ostringstream s;
 			
 			
-			s<<setw(23)<<" "
-			 <<setfill('_')<<setw(30)<<"_"
+			s<<setw(25)<<"©¦"
+			 <<setfill('_')<<setw(28)<<"_"
 			 <<setfill(' ')<<endl;
 
-			s<<setw(25)<<"["+situation+"] ";
+			s<<setw(25)<<" ["+situation+"]©à";
 
 			s<<begin_t.watch_time()<<"-"<<end_t.watch_time()<<" | "
-			 <<name<<"(add:"<<address<<") "
-			 <<"\n"<<setw(39)<<" | "<<"×¢:"<<remind;
+			 <<"theme:"<<name
+			 <<"\n"<<setw(25)<<"©¦"<<setw(14)<<"| "<<"  add:"<<address
+			 <<"\n"<<setw(25)<<"©¦"<<setw(14)<<"| "<<"   ×¢:"<<remind
+			 <<endl;//<<setw(25)<<"©¦"<<endl;
 			 
 			return s.str();
 		}
@@ -70,10 +72,13 @@ class Rec{
 
 			return s.str();
 		}
+		void desk(){
+			
+		}
 };
 
 ostream &operator<<(ostream &output, Rec rec){
-	output<<rec.name<<" "<<rec.address<<" "<<rec.begin_t<<" "<<rec.end_t<<" "<<rec.remind;
+	output<<"["<<rec.situation<<"] "<<rec.begin_t<<"~"<<rec.end_t<<" "<<rec.name<<" "<<rec.address<<" "<<rec.remind;
 	return output;
 }
 

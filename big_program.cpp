@@ -29,6 +29,9 @@ bool register_legal(string);		//判断新账号的合法性
 void user_desk(int);		// 个人界面 
 int user_get_order(int);		// 获取个人界面用户操作 
 
+void print_title(const string place = "");
+void mSleep(long=1000);
+
 #include"user.h"		//包含全局变量userlist 
 
 int main(){
@@ -102,8 +105,8 @@ void save_data(){
 }
 
 int m_get_order(){
-	char w_button=' ';
-	int mark = 0;
+	char w_button=72;
+	int mark = 1;
 	do {
 		switch(w_button){
 			case 72:{
@@ -120,21 +123,17 @@ int m_get_order(){
 				break;
 			}
 		}	
-		system("cls");
-		m_print(mark);
+		if (w_button==72||w_button==80){
+			system("cls");
+			m_print(mark);
+		}
 	} while (w_button=getch());
 }
 
 void m_print(int m){ 
-	Time now_time;
-    cout<<left<<setw(40)<<">主页"
-    	<<right<<setw(40)<<now_time.print_time()+" "
-		<<endl
-  	    <<setfill('-')<<setw(80)<<"-"
-		<<setfill(' ')
-		<<endl;
+	print_title();
 	
-	cout<<endl<<setw(28)<<" "<<"--=会议管理系统 ";
+	cout<<setw(28)<<" "<<"--=会议管理系统 ";
 	switch(m){
 		case 0:{ cout<<"^ｏ^"; break;}
 		case 1:{ cout<<";)"; break;}
@@ -156,8 +155,7 @@ void m_print(int m){
 		else cout<<setw(30)<<" "
 				 <<order_arr1[i]<<endl<<endl;
 
-	cout<<endl
-		<<setw(23)<<" "
+	cout<<setw(23)<<" "
 		<<setfill('_')<<setw(30)<<"_"
 		<<setfill(' ')<<endl;		
 		
@@ -165,15 +163,9 @@ void m_print(int m){
 }
 
 void log_desk(){	
-    Time now_time;
-    cout<<left<<setw(40)<<">主页>登录"
-    	<<right<<setw(40)<<now_time.print_time()+" "
-		<<endl 
-    	<<setfill('-')<<setw(80)<<"-"
-		<<setfill(' ')
-		<<endl;
+    print_title(">登录");
 
-	cout<<endl<<setw(30)<<" "<<"--=登录系统账户 >_< =--"<<endl<<endl;
+	cout<<setw(30)<<" "<<"--=登录系统账户 >_< =--"<<endl<<endl;
 	
 	string id, code;
 	
@@ -200,15 +192,9 @@ int log_search(string id, string code){
 }
 
 void register_desk(){
-    Time now_time;
-    cout<<left<<setw(40)<<">主页>注册"
-    	<<right<<setw(40)<<now_time.print_time()+" "
-		<<endl 
-    	<<setfill('-')<<setw(80)<<"-"
-		<<setfill(' ')
-		<<endl;
+    print_title(">注册");
     
-	cout<<endl<<setw(30)<<" "<<"--=注册新用户 ^3^ =--"<<endl<<endl;
+	cout<<setw(30)<<" "<<"--=注册新用户 ^3^ =--"<<endl<<endl;
 	
 	string id, code;
 	
@@ -258,8 +244,9 @@ void user_desk(int u_order){
 }
 
 int user_get_order(int u_order){
-	char w_button=' ';
-	int mark = 0;
+	char w_button='72;
+	int mark = 1;
+	const string s_today=userlist[u_order].show_today();
 	do {
 		switch(w_button){
 			case 72:{
@@ -276,9 +263,27 @@ int user_get_order(int u_order){
 				break;
 			}
 		}	
-		system("cls");
-		userlist[u_order].u_print(mark);
+		if (button==72||button==80){
+			system("cls");
+			userlist[u_order].u_print(s_today,mark);
+		}
 	} while (w_button=getch());
 }
 
+void print_title(const string place){
+	Time now_time;
+    cout<<left<<setw(40)<<">主页"+place
+    	<<right<<setw(40)<<now_time.print_time()+" "
+		<<endl
+    	<<setfill('-')<<setw(80)<<"-"
+		<<setfill(' ')
+		<<endl;
+}
 
+void mSleep(long m_second){
+
+	for(int i = 0; i< m_second; i++){
+		for (int j=0; j<480000;j++){
+		}
+	}
+}

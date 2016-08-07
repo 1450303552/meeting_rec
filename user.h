@@ -31,6 +31,35 @@ class User{
 		}
 		~User(){
 		}
+		bool ensure(){
+			cout<<setw(23)<<" "<<"是否确定创建/保存修改？\n";
+			cout<<setw(23)<<" "<<"请按'y'保存并推出/'n'直接退出;\n";
+			char choice;
+			while(choice=getch()){
+				if (choice=='n'){
+					cout<<setw(23)<<" "<<"退出成功！数据未被修改！";
+					mSleep(1000);
+					return false;
+				}
+				else if (choice=='y'){
+					cout<<setw(23)<<" "<<"成功保存！";
+					mSleep(1000);
+					return true;
+				}
+			}
+			
+		}
+		void print_title(const string place=""){
+			Time now_time;
+			ostringstream s;
+			s<<">主页>登录> "<<id<<" 个人主页"<<place;
+    		cout<<left<<setw(40)<<s.str()
+    			<<right<<setw(40)<<now_time.print_time()+" "
+				<<endl
+				<<setfill('-')<<setw(80)<<"-"
+				<<setfill(' ')
+				<<endl;
+		}
 		void set_ord(int ord){
 			order = ord;
 		}
@@ -42,61 +71,42 @@ class User{
 			if (i==id) return true;
 			return false;
 		}
-		void show_today(){
-			cout<<endl;
+		string show_today(){
+			ostringstream s;
 			
 			int mark = 0;
 			for(vector<Rec>::iterator i = reclist.begin(); i!=reclist.end();i++){
 				i->renew_situaiton();
 				if(i->is_today()){
+					
 					mark = 1;
 					
-					cout<<i->for_short()
-						<<endl;
+					//cout<<i->for_short();
+					s<<i->for_short();
 				}
 			}
 			if (mark==0){
-				/*cout<<endl
-					<<setw(23)<<" "
-					<<setfill('_')<<setw(30)<<"_"
-					<<setfill(' ')<<endl;*/
-				cout<<endl<<setw(23)<<" "
-					<<":今天没有会议，好好休息休息或者下班后去勾搭勾搭妹纸^3^！\n\n\n";
+				//cout<<endl<<endl<<setw(23)<<" "
+				//	<<":今天没有会议，好好休息休息或者下班后去勾搭勾搭妹纸^3^！\n\n\n";
+				s<<endl<<endl<<setw(23)<<" "
+					<<"【今天没有会议，好好休息休息或者下班后去勾搭勾搭妹纸^3^！】\n";
 			}
 			else {
-				/*cout<<endl
-					<<setw(23)<<" "
-					<<setfill('-')<<setw(30)<<"-"
-					<<setfill(' ')<<endl;*/
-				cout<<endl<<setw(23)<<" "
-					<<":感觉，身体被掏空_(:3J<)_！MDZZ！\n\n\n";
+				//cout<<endl<<endl<<setw(23)<<" "
+				//	<<":感受，身体被掏空_(:3J<)_！MDZZ！\n\n\n";
+				s<<endl<<endl<<setw(23)<<" "
+					<<"【感觉，身体被掏空_(:3J<)_！MDZZ！】\n";
 			}
-			
-			/*cout<<setw(23)<<" "
-				<<setfill('-')<<setw(30)<<"-"
-				<<setfill(' ')<<endl;*/
+			return s.str();
 		}
-		void u_print(int m){
-			Time now_time;
-			ostringstream s;
-			s<<">主页>登录> "<<id<<" 个人主页";
-    		cout<<left<<setw(40)<<s.str()
-    			<<right<<setw(40)<<now_time.print_time()+" "
-				<<endl
-				<<setfill('-')<<setw(80)<<"-"
-				<<setfill(' ')
-				<<endl;
-	
-			cout<<endl<<setw(30)<<" "<<"--=个人主页 ";
-			switch(m){
-				case 0:{ cout<<"＋ｏ＋"; break;}
-				case 1:{ cout<<"＞ｏ＜"; break;}
-				case 2:{ cout<<"o＿O"; break;}
-			}
-			cout<<" =--"<<endl;
-			
-			show_today();
-			
+		void u_print(const string show_today,int m){
+			print_title();
+
+			string ico[]={"＋ｏ＋","＞ｏ＜","o＿O"};
+   			cout<<setw(32)<<" "<<"--=o("<<ico[m]<<")o=--"<<endl;
+
+			cout<<show_today;
+
 			cout<<endl;
 			/*cout<<setw(23)<<" "
 				<<setfill('+')<<setw(30)<<"+"
@@ -113,59 +123,244 @@ class User{
 				else cout<<setw(29)<<" "
 						 <<order_arr1[i]<<endl<<endl;
 
-			cout<<endl
-				<<setw(23)<<" "
-				<<setfill('_')<<setw(30)<<"_"
-				<<setfill(' ')<<endl;		
-		
-			cout<<setw(23)<<" "<<"注：上下方向键控制选择，按Enter键确认操作";
+		}
+		int print_chose_time(const string have_set,int f_order,int s_order, int size, int mark){
+			print_title(">新会议记录");
+			cout<<have_set;
+			
+			//确定选项显示范围
+			static int begin;
+			static int end;
+			if (mark == 1){
+				begin = s_order;
+				end = begin+4;
+			}
+			else if (s_order == 0){
+				begin= 0;
+				end = 4;
+			}
+			else if (s_order == size-1){
+				begin = s_order-4;
+				end = s_order;
+			}
+			else if (s_order>end){
+				begin++;
+				end++;
+			}
+			else if (s_order<begin) {
+				begin--;
+				end--;
+			}
+			
+			Time now;
+			const int year = now.get_year();
+			int f_button[]={year, 1, 1, 0, 0};
+			int arr_pace[] = {1, 1, 1, 1, 5};
+			int pace = arr_pace[f_order];
+			
+			int wid=0;
+			for (int i= have_set.size()-1; i>=0; i--){
+				if (have_set[i]=='\n') break;
+				else wid++;
+			}
+			
+			//记录第一个键显示的值
+			int button = begin*pace+f_button[f_order], return_num;
+			for (int i= begin; i<=end; i++){
+
+				if (i!=begin) {
+					cout<<setw(wid)<<" ";
+					button+=pace;
+				}
+				
+				if (s_order == i){
+					cout<<">"<<button<<endl;
+					return_num = button;
+				}
+				else cout<<button<<endl;
+				
+			}
+
+			return return_num;
+		}
+		Time chose_time(const string what_time){
+			char w_button=' ';
+			int size[] = {5, 12, 31, 24, 12};
+			int f_order = 0, s_order = 0;
+			int time_data[5];
+			string word[]={"/", "/", " ", ":", ""};
+			string have_set=what_time;
+			
+			do {
+				switch(w_button){
+					case 72:{
+						s_order  = (s_order-1)%size[f_order];
+						if (s_order<0) s_order = size[f_order]-1;
+						break;
+					}
+					case 80:{
+						s_order = (s_order+1)%size[f_order];
+						break;
+					}
+					case 13:{
+						
+						if (f_order == 1){
+							int &day = size[2];
+							int year = time_data[f_order-1],
+								mon = time_data[f_order];
+								
+							if (mon==2){
+								if (year%4==0&&year%100!=0) day = 29;
+								else if (year % 400==0) day = 29;
+								else day = 28;
+							}
+							else if(mon<=7){
+								if (mon%2==0) day = 30;
+								else day = 31;
+							}
+							else if (mon>7){
+								if (mon%2==0) day = 31;
+								else day = 30;
+							}
+						}
+
+						ostringstream s;
+						s<<setfill('0')
+						 <<setw(2)<<time_data[f_order]
+						 <<word[f_order]
+						 <<setfill(' ');
+						have_set +=s.str();
+						
+						Time now;
+						int f_place[] = {0, now.get_month()-1,
+											now.get_day()-1,
+											now.get_hour(),
+											now.get_minute()/5};
+						s_order = f_place[f_order+1];
+						f_order++;
+						break;
+					}//end case 13:
+				}//end switch();
+				
+				system("cls");
+				int k=0;        //用于判断是否按确定键的键值
+				if (w_button==13) k = 1;
+				time_data[f_order] =
+					print_chose_time(have_set, f_order, s_order, size[f_order], k);
+				
+				if(f_order==5){
+				  Time t(time_data[0],
+						   time_data[1],
+						   time_data[2],
+						   time_data[3],
+						   time_data[4]);
+				  return t;
+				}
+			} while (w_button=getch());
 		}
 		void new_rec(){
-			Time now_time;
-			ostringstream s;
-			s<<">主页>登录>"<<id<<"个人主页>新会议记录";
-    		cout<<left<<setw(40)<<s.str()
-	            <<right<<setw(40)<<now_time.print_time()+" "
-				<<endl
-				<<setfill('-')<<setw(80)<<"-"
-				<<setfill(' ')
-				<<endl;
-			
+			print_title(">新会议记录");
+
 			string n, ad, r;
 			Time bt, et; 
 			
-			cout<<endl<<setw(29)<<" "<<"会议名称：";
+			cout<<setw(33)<<" "<<"会议主题：";
 			cin>>n;
 			
-			cout<<endl<<setw(29)<<" "<<"会议地点：";
+			cout<<setw(33)<<" "<<"会议地点：";
 			cin>>ad;
 			
-			cout<<endl<<setw(29)<<" "<<"开始时间：";
-			cin>>bt;
+			ostringstream copy_desk;
+			copy_desk<<setw(33)<<" "<<"会议主题："<<n<<endl;
+			copy_desk<<setw(33)<<" "<<"会议地点："<<ad<<endl;
+			copy_desk<<setw(29)<<" "<<"会议开始时间：";
+
+			//system("cls");
+			bt = chose_time(copy_desk.str());
+			copy_desk<<bt.print_time()<<endl;
+			copy_desk<<setw(29)<<" "<<"会议结束时间：";
+			et = chose_time(copy_desk.str());
+			copy_desk<<et.print_time()<<endl;
+			system("cls");
 			
-			cout<<endl<<setw(29)<<" "<<"结束时间：";
-			cin>>et;
-			
-			cout<<endl<<setw(29)<<" "<<"备注：";
+			print_title(">新会议记录");
+			cout<<copy_desk.str();
+			cout<<setw(37)<<" "<<"备注：";
 			cin>>r;
+			cout<<endl;
+			//确认保存
+			if (ensure())
+				reclist.push_back(Rec(n, ad, bt, et, r));
+		}
+		void show_all(){
+			int num=1;
 			
-			reclist.push_back(Rec(n, ad, bt, et, r));
+			while(num!=0){
+				int size = reclist.size();
+				int wid=0;
+				while(size!=0){
+					size/=10;
+					wid++;
+				}
+				for (vector<Rec>::iterator i = reclist.begin(); i!=reclist.end(); i++){
+					cout<<" "<<setfill('0')<<setw(wid)<<i-reclist.begin()+1
+						<<setfill(' ')
+						<<" "<<*i<<endl;
+				}
+			
+				cout<<endl<<setw(23)<<" "<<"请输入相应编号，进入相应记录(输入0退出)：";
+				while(!(cin>>num)){
+					cin.clear();
+					while(cin.get()!='\n') continue;
+					cout<<setw(23)<<" "<<"检测到非法输入！请重新输入(输入0退出)：";
+				}
+				if (num==0) return;
+			 //	else reclist[num-1]
+			}
+			
+		}
+		void print_check(int mark){
+			print_title(">查询会议记录");
+			
+			cout<<endl;
+			string order_arr1[]={"   |所有记录|   ", "  |自定义筛选|  ", "     |退出|     "};
+			string order_arr2[]={" |> 所有记录 <| ", "|> 自定义筛选 <|", "   |> 退出 <|   "};
+			for (int i = 0; i < 3; i++)
+				if (i == mark){
+					cout<<setw(30)<<" "
+						<<order_arr2[i]<<endl<<endl;
+				}
+				else cout<<setw(30)<<" "
+						 <<order_arr1[i]<<endl<<endl;
+
+
 		}
 		void check_rec(){
-			Time now_time;
-			ostringstream s;
-			s<<">主页>登录>"<<id<<"个人主页>查看记录";
-    		cout<<left<<setw(40)<<s.str()
-    			<<right<<setw(40)<<now_time.print_time()+" "
-				<<endl
-				<<setfill('-')<<setw(80)<<"-"
-				<<setfill(' ')
-				<<endl;
+			char w_button=72;
+			int mark = 1;
+			do {
+				switch(w_button){
+					case 72:{
+						mark  = (mark-1)%3;
+						if (mark<0) mark = 2;
+						break;
+					}
+					case 80:{
+						mark = (mark+1)%3;
+						break;
+					}
+					case 13:{
+						//用个函数指针数组；
+						return;
+						break;
+					}
+				}
+				if (w_button==72||w_button==80){
+					system("cls");
+					print_check(mark);
+				}
 				
-			for(vector<Rec>::iterator i = reclist.begin(); i!=reclist.end(); i++){
-				cout<<i->print_line()<<endl;
-			}
-			char t_c=getch();
+			} while (w_button=getch());
 		}
 };
 

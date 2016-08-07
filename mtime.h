@@ -18,9 +18,15 @@ class Time{
 	//	int second;		//秒 
 	public:
 		Time();
+		Time(int,int,int,int,int);
 		string watch_time();
 		bool is_today();
 		string print_time();
+		int get_year();
+		int get_month();
+		int get_day();
+		int get_hour();
+		int get_minute();
 };
 
 //Time相关函数 
@@ -33,6 +39,13 @@ Time::Time(){
 	hour = breaktime->tm_hour;
 	minute = breaktime->tm_min;
 //	second = breaktime->tm_sec;
+}
+Time::Time(int y, int m, int d, int h, int min){
+	year = y;
+	month = m;
+	day = d;
+	hour = h;
+	minute = min;
 }
 string Time::watch_time(){
 	ostringstream s;
@@ -49,6 +62,21 @@ string Time::print_time(){
 	s<<right<<setfill('0')<<setw(2)<<hour<<':'<<setw(2)<<minute;//<<':'<<setw(2)<<t.second;
 	s<<setfill(' ');
 	return s.str();
+}
+int Time::get_year(){
+	return year;
+}
+int Time::get_month(){
+	return month;
+}
+int Time::get_day(){
+	return day;
+}
+int Time::get_hour(){
+	return hour;
+}
+int Time::get_minute(){
+	return minute;
 }
 ostream &operator<<(ostream &output, Time t){		//时间输出
 	output<<t.year<<' '<<t.month<<' '<<t.day<<' '<<t.hour<<' '<<t.minute;
