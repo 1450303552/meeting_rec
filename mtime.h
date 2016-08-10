@@ -22,6 +22,13 @@ class Time{
 		string watch_time();
 		bool is_today();
 		string print_time();
+		void zero(){
+			year = month = day = hour = minute = 0;
+		}
+		void max(){
+			year = 9999;
+		}
+		int user_input();
 		int get_year();
 		int get_month();
 		int get_day();
@@ -62,6 +69,52 @@ string Time::print_time(){
 	s<<right<<setfill('0')<<setw(2)<<hour<<':'<<setw(2)<<minute;//<<':'<<setw(2)<<t.second;
 	s<<setfill(' ');
 	return s.str();
+}
+int Time::user_input(){
+	//输入时间及检测输入合法性
+			int data[5];
+			string str;
+			int m = 0;
+			char c;
+			while((c=cin.get())!='\n'){
+				if (c!=' '&&!isdigit(c)){
+					cout<<setw(29)<<" "<<"检测到非法字符"<<c<<"，请重新输入\n";
+					cout<<setw(29)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
+					return -1;
+				}
+				if (c==' ') {
+					if (str!=""){
+
+						if (m>=4) {
+							cout<<setw(29)<<" "<<"检测到多余输入，请重新输入\n";
+							cout<<setw(29)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
+							return -1;
+						}
+						istringstream s(str);
+						s>>data[m];
+						m++;
+						str="";
+					}
+				}
+				else str+=c;
+
+			}
+			if (m==0) {
+				return 0;
+    		}
+   			if (m<4) {
+    			cout<<setw(29)<<" "<<"保持年月日于同一行，请重新输入\n";
+    			cout<<setw(29)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
+				return -1;
+    		}
+			istringstream s(str);
+			s>>data[m];
+			year = data[0];
+			month = data[1];
+			day = data[2];
+			hour = data[3];
+		 	minute = data[4];
+		 	return 1;
 }
 int Time::get_year(){
 	return year;

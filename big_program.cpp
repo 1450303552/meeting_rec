@@ -32,6 +32,10 @@ int user_get_order(int);		// 获取个人界面用户操作
 void print_title(const string place = "");
 void mSleep(long=1000);
 
+bool ensure();
+
+
+
 #include"user.h"		//包含全局变量userlist 
 
 int main(){
@@ -98,7 +102,7 @@ void save_data(){
 		vector<Rec> &t = i->reclist;
 		outfile<<i->id<<" "<<i->code<<" "<<i->order<<" "<<t.size()<<endl;
 		for(vector<Rec>::iterator j = t.begin(); j!=t.end();j++)
-			outfile<<*j<<endl;
+			outfile<<j->print_line()<<endl;
 	}
 	
 	outfile.close();
@@ -244,7 +248,7 @@ void user_desk(int u_order){
 }
 
 int user_get_order(int u_order){
-	char w_button='72;
+	char w_button=72;
 	int mark = 1;
 	const string s_today=userlist[u_order].show_today();
 	do {
@@ -263,7 +267,7 @@ int user_get_order(int u_order){
 				break;
 			}
 		}	
-		if (button==72||button==80){
+		if (w_button==72||w_button==80){
 			system("cls");
 			userlist[u_order].u_print(s_today,mark);
 		}
@@ -287,3 +291,23 @@ void mSleep(long m_second){
 		}
 	}
 }
+
+bool ensure(){
+	cout<<setw(23)<<" "<<"【是否确定保存当前修改？】\n";
+	cout<<setw(23)<<" "<<"【请按'y'保存并推出，或'n'直接退出;】\n";
+	char choice;
+	while(choice=getch()){
+		if (choice=='n'){
+			cout<<setw(23)<<" "<<"【退出成功！数据未被修改！】";
+			mSleep(1000);
+			return false;
+		}
+		else if (choice=='y'){
+			cout<<setw(23)<<" "<<"【修改成功！】";
+			mSleep(1000);
+			return true;
+		}
+	}
+}
+
+

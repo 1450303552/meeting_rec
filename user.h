@@ -31,24 +31,7 @@ class User{
 		}
 		~User(){
 		}
-		bool ensure(){
-			cout<<setw(23)<<" "<<"是否确定创建/保存修改？\n";
-			cout<<setw(23)<<" "<<"请按'y'保存并推出/'n'直接退出;\n";
-			char choice;
-			while(choice=getch()){
-				if (choice=='n'){
-					cout<<setw(23)<<" "<<"退出成功！数据未被修改！";
-					mSleep(1000);
-					return false;
-				}
-				else if (choice=='y'){
-					cout<<setw(23)<<" "<<"成功保存！";
-					mSleep(1000);
-					return true;
-				}
-			}
-			
-		}
+		
 		void print_title(const string place=""){
 			Time now_time;
 			ostringstream s;
@@ -289,35 +272,79 @@ class User{
 			cin>>r;
 			cout<<endl;
 			//确认保存
-			if (ensure())
+			if (ensure()){
 				reclist.push_back(Rec(n, ad, bt, et, r));
-		}
-		void show_all(){
-			int num=1;
-			
-			while(num!=0){
-				int size = reclist.size();
-				int wid=0;
-				while(size!=0){
-					size/=10;
-					wid++;
-				}
-				for (vector<Rec>::iterator i = reclist.begin(); i!=reclist.end(); i++){
-					cout<<" "<<setfill('0')<<setw(wid)<<i-reclist.begin()+1
-						<<setfill(' ')
-						<<" "<<*i<<endl;
-				}
-			
-				cout<<endl<<setw(23)<<" "<<"请输入相应编号，进入相应记录(输入0退出)：";
-				while(!(cin>>num)){
-					cin.clear();
-					while(cin.get()!='\n') continue;
-					cout<<setw(23)<<" "<<"检测到非法输入！请重新输入(输入0退出)：";
-				}
-				if (num==0) return;
-			 //	else reclist[num-1]
+				sort_reclist();
 			}
-			
+		}
+		void print_edit(int mark){
+			print_title(">查看记录>编辑");
+
+			int wid=0, size=mark+1;
+			while(size) {
+				size /= 10;
+				wid++;
+			}
+			cout<<endl
+				<<" "<<setw(wid)<<"No"
+				<<left
+				<<" 记录状态 "
+				<<"    开始时间    ~    结束时间    "<<" "
+				<<setw(10)<<"主题"<<setw(10)<<"地点"<<setw(20)<<"备注"
+		 		<<right<<endl;
+			cout<<reclist[mark]<<endl;
+
+			string order_arr1[]={"  |删除当前记录|  ", "    |修改记录|    ", "      |退出|      "};
+			string order_arr2[]={"|> 删除当前记录 <|", "  |> 修改记录 <|  ", "    |> 退出 <|    "};
+
+			for (int i = 0; i < 3; i++)
+				if (i == mark){
+					cout<<setw(29)<<" "
+						<<order_arr2[i]<<endl<<endl;
+				}
+				else cout<<setw(29)<<" "
+						 <<order_arr1[i]<<endl<<endl;
+		}
+		void edit_rec(int n){
+			char w_button=72;
+			int mark = 1;
+			do {
+				switch(w_button){
+					case 72:{
+						mark  = (mark-1)%3;
+						if (mark<0) mark = 2;
+						break;
+					}
+					case 80:{
+						mark = (mark+1)%3;
+						break;
+					}
+					case 13:{
+						if (mark == 2) return;
+						else if (mark == 1) {
+							system("cls");
+							print_title(">查看记录>编辑");
+							reclist[n].edit();
+							sort_reclist();
+						}
+						else if (mark == 0) {
+							system("cls");
+							print_title(">查看记录>编辑");
+							cout<<endl<<endl;
+							if(ensure()) {
+								reclist.erase(reclist.begin()+n);
+								return;
+							}
+						}
+						break;
+					}
+				}
+				if (w_button==72||w_button==80||w_button==13){
+					system("cls");
+					print_edit(mark);
+				}
+
+			} while (w_button=getch());
 		}
 		void print_check(int mark){
 			print_title(">查询会议记录");
@@ -335,6 +362,87 @@ class User{
 
 
 		}
+		void search_rec(const string title, string key, Time b, Time e){
+			int num=1;
+			print_title(title);
+			while(num!=0){
+				int size = reclist.size();
+				int wid=0;
+				while(size!=0){
+					size/=10;
+					wid++;
+				}
+				cout<<endl
+					<<" "<<setw(wid)<<"No"
+					<<left
+					<<" 记录状态 "
+					<<"    开始时间    ~    结束时间    "<<" "
+					<<setw(10)<<"主题"<<setw(10)<<"地点"<<setw(20)<<"备注"
+		 			<<right<<endl;
+
+				bool *mark = new bool[reclist.size()];
+				
+				for (vector<Rec>::iterator i = reclist.begin(); i!=reclist.end(); i++){
+					int n =i-reclist.begin();
+					if (i->match_key(key)&&i->match_time(b, e)){
+						cout<<" "<<setfill('0')<<setw(wid)<<n+1
+							<<setfill(' ')
+							<<" "<<*i<<endl;
+							mark[n] = true;
+					}
+					else mark[n]  = false;
+				}
+
+				cout<<endl<<setw(23)<<" "<<"请输入相应编号，编辑相应记录(输入0退出)：";
+				do{
+
+					if(num>reclist.size()||num<0)
+						if (num!=0&&!mark[num])
+							cout<<setw(23)<<" "<<"不存在该编号！请重新输入(0退出)：";
+					while(!(cin>>num)){
+						cin.clear();
+						while(cin.get()!='\n') continue;
+						cout<<setw(23)<<" "<<"检测到非法字符！请重新输入(0退出)：";
+					}
+				}while (num>=reclist.size()||num<0);
+				if (num==0) return;
+			    else {
+					edit_rec(num-1);
+					system("cls");
+				}
+				
+				delete []mark;
+			}
+			
+		}
+		void condition_rec(){
+			system("cls");
+			print_title(">查询会议记录>自定义");
+			
+			string key;
+			cout<<setw(29)<<" "<<"请输入筛选关键词(直接Enter跳过该项):";
+			char c;
+			while ((c=cin.get())!='\n') key+=c;
+			cout<<endl;
+			
+			Time temp_b, temp_e;
+			cout<<setw(29)<<" "<<"请输入开始时间(直接Enter跳过该项):";
+			
+			int m;
+			while ((m = temp_b.user_input())==-1) continue;
+			cout<<endl;
+			if (m == 0) temp_b.zero();
+			
+			cout<<setw(29)<<" "<<"请输入结束时间:";
+			
+			while ((m = temp_e.user_input())==-1) continue;
+			cout<<endl;
+			if (m == 0) temp_e.max();
+			
+			system("cls");
+			search_rec(">查询记录>自定义", key, temp_b, temp_e);
+			system("cls");
+		}
 		void check_rec(){
 			char w_button=72;
 			int mark = 1;
@@ -350,17 +458,37 @@ class User{
 						break;
 					}
 					case 13:{
-						//用个函数指针数组；
-						return;
+						system("cls");
+						if (mark == 0) {
+							Time b,e;
+							b.zero();
+							e.max();
+							search_rec(">查询记录>所有记录", "", b, e);
+						}
+						else if (mark == 1) condition_rec();
+						else if (mark == 2) return;
+						mark = 0;
 						break;
 					}
 				}
-				if (w_button==72||w_button==80){
+				if (w_button==72||w_button==80||w_button==13){
 					system("cls");
 					print_check(mark);
 				}
 				
 			} while (w_button=getch());
+		}
+		void sort_reclist(){
+			int size = reclist.size();
+			for (int i = 1; i<size; i++){
+				int p = i;
+				Rec t = reclist[i];
+				while (p>=1 && t<reclist[p-1]){
+					reclist[p] = reclist[p-1];
+					p--;
+				}
+				reclist[p] = t;
+			}
 		}
 };
 
