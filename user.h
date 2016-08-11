@@ -247,21 +247,21 @@ class User{
 			string n, ad, r;
 			Time bt, et; 
 			
-			cout<<setw(33)<<" "<<"会议主题：";
+			cout<<setw(23)<<" "<<"会议主题：";
 			cin>>n;
 			
-			cout<<setw(33)<<" "<<"会议地点：";
+			cout<<setw(23)<<" "<<"会议地点：";
 			cin>>ad;
 			
 			ostringstream copy_desk;
-			copy_desk<<setw(33)<<" "<<"会议主题："<<n<<endl;
-			copy_desk<<setw(33)<<" "<<"会议地点："<<ad<<endl;
-			copy_desk<<setw(29)<<" "<<"会议开始时间：";
+			copy_desk<<setw(23)<<" "<<"会议主题："<<n<<endl;
+			copy_desk<<setw(23)<<" "<<"会议地点："<<ad<<endl;
+			copy_desk<<setw(23)<<" "<<"会议开始时间：";
 
 			//system("cls");
 			bt = chose_time(copy_desk.str());
 			copy_desk<<bt.print_time()<<endl;
-			copy_desk<<setw(29)<<" "<<"会议结束时间：";
+			copy_desk<<setw(23)<<" "<<"会议结束时间：";
 			et = chose_time(copy_desk.str());
 			copy_desk<<et.print_time()<<endl;
 			system("cls");
@@ -277,7 +277,7 @@ class User{
 				sort_reclist();
 			}
 		}
-		void print_edit(int mark){
+		void print_edit(int n, int mark){
 			print_title(">查看记录>编辑");
 
 			int wid=0, size=mark+1;
@@ -292,7 +292,7 @@ class User{
 				<<"    开始时间    ~    结束时间    "<<" "
 				<<setw(10)<<"主题"<<setw(10)<<"地点"<<setw(20)<<"备注"
 		 		<<right<<endl;
-			cout<<reclist[mark]<<endl;
+			cout<<reclist[n]<<endl;
 
 			string order_arr1[]={"  |删除当前记录|  ", "    |修改记录|    ", "      |退出|      "};
 			string order_arr2[]={"|> 删除当前记录 <|", "  |> 修改记录 <|  ", "    |> 退出 <|    "};
@@ -341,7 +341,7 @@ class User{
 				}
 				if (w_button==72||w_button==80||w_button==13){
 					system("cls");
-					print_edit(mark);
+					print_edit(n, mark);
 				}
 
 			} while (w_button=getch());
@@ -419,21 +419,23 @@ class User{
 			system("cls");
 			print_title(">查询会议记录>自定义");
 			
+			cin.clear();
+			cin.sync();
 			string key;
-			cout<<setw(29)<<" "<<"请输入筛选关键词(直接Enter跳过该项):";
+			cout<<setw(23)<<" "<<"请输入筛选关键词(直接Enter跳过该项):";
 			char c;
 			while ((c=cin.get())!='\n') key+=c;
 			cout<<endl;
 			
 			Time temp_b, temp_e;
-			cout<<setw(29)<<" "<<"请输入开始时间(直接Enter跳过该项):";
+			cout<<setw(23)<<" "<<"请输入开始时间(直接Enter跳过该项):";
 			
 			int m;
 			while ((m = temp_b.user_input())==-1) continue;
 			cout<<endl;
 			if (m == 0) temp_b.zero();
 			
-			cout<<setw(29)<<" "<<"请输入结束时间:";
+			cout<<setw(23)<<" "<<"请输入结束时间:";
 			
 			while ((m = temp_e.user_input())==-1) continue;
 			cout<<endl;

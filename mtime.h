@@ -7,6 +7,8 @@ class Time{
 	friend ostream &operator<<(ostream &output, Time t);
 	friend istream &operator>>(istream &input, Time &t);
 	friend bool operator==(Time, Time);
+	friend bool operator<=(Time, Time);
+	friend bool operator>=(Time, Time);
 	friend bool operator>(Time, Time);
 	friend bool operator<(Time, Time);
 	private:
@@ -26,7 +28,7 @@ class Time{
 			year = month = day = hour = minute = 0;
 		}
 		void max(){
-			year = 9999;
+			year = 99999;
 		}
 		int user_input();
 		int get_year();
@@ -78,16 +80,16 @@ int Time::user_input(){
 			char c;
 			while((c=cin.get())!='\n'){
 				if (c!=' '&&!isdigit(c)){
-					cout<<setw(29)<<" "<<"检测到非法字符"<<c<<"，请重新输入\n";
-					cout<<setw(29)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
+					cout<<setw(23)<<" "<<"检测到非法字符"<<c<<"，请重新输入\n";
+					cout<<setw(23)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
 					return -1;
 				}
 				if (c==' ') {
 					if (str!=""){
 
 						if (m>=4) {
-							cout<<setw(29)<<" "<<"检测到多余输入，请重新输入\n";
-							cout<<setw(29)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
+							cout<<setw(23)<<" "<<"检测到多余输入，请重新输入\n";
+							cout<<setw(23)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
 							return -1;
 						}
 						istringstream s(str);
@@ -103,8 +105,8 @@ int Time::user_input(){
 				return 0;
     		}
    			if (m<4) {
-    			cout<<setw(29)<<" "<<"保持年月日于同一行，请重新输入\n";
-    			cout<<setw(29)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
+    			cout<<setw(23)<<" "<<"保持年月日于同一行，请重新输入\n";
+    			cout<<setw(23)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
 				return -1;
     		}
 			istringstream s(str);
@@ -142,6 +144,12 @@ istream &operator>>(istream &input, Time &t){		//时间输入
 bool operator==(Time t1, Time t2){
 	if (/*t1.second == t2.second&& */t1.minute == t2.minute&&t1.hour==t2.hour&&t1.day == t2.day&&t1.month==t2.month&&t1.year == t2.year) return true;
 	return false;
+}
+bool operator>=(Time t1, Time t2){
+	return t1>t2||t1==t2;
+}
+bool operator<=(Time t1, Time t2){
+	return t1<t2||t1==t2;
 }
 bool operator>(Time t1, Time t2){
 	if (t1.year > t2.year) return true;

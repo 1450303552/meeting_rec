@@ -25,7 +25,7 @@ class Rec{
 			return false;
 		}
 		bool match_time(Time &b, Time &e){
-			if (begin_t<b&&end_t>e) return true;
+			if (begin_t>=b&&end_t<=e) return true;
 			return false;
 		}
 		void renew_situaiton(){
@@ -60,8 +60,7 @@ class Rec{
 			
 			
 			s<<setw(25)<<"│"
-			 <<setfill('_')<<setw(28)<<"_"
-			 <<setfill(' ')<<endl;
+			 <<"──────────────"<<endl;
 
 			s<<setw(25)<<" ["+situation+"]┼";
 
@@ -76,16 +75,16 @@ class Rec{
 		string print_line(){
 			ostringstream s;
 			s<<name<<" "<<address<<" "
-			 <<begin_t.print_time()<<" "
-			 <<end_t.print_time()<<" "
+			 <<begin_t<<" "
+			 <<end_t<<" "
 			 <<remind;
 
 			return s.str();
 		}
 		string single_edit(const string &content, string& data){
 			string temp;
-			cout<<setw(29)<<" "<<"会议"<<content<<"："<<data<<endl;
-			cout<<setw(29)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
+			cout<<setw(23)<<" "<<"会议"<<content<<"："<<data<<endl;
+			cout<<setw(23)<<" "<<"输入修改内容(直接Enter跳过该项修改)：";
 			char c;
 			while((c = cin.get())!='\n'){
 				temp+=c;
@@ -95,9 +94,9 @@ class Rec{
 			else return temp;
 		}
 		Time single_edit(const string &content, Time& data){
-			cout<<setw(29)<<" "<<"会议"<<content<<"："<<data.print_time()<<endl;
-			cout<<setw(29)<<" "<<"请按年月日时分的顺序输入修改内容"<<endl;
-			cout<<setw(29)<<" "<<"(或直接Enter跳过该项修改)：";
+			cout<<setw(23)<<" "<<"会议"<<content<<"："<<data.print_time()<<endl;
+			cout<<setw(23)<<" "<<"请按年月日时分的顺序输入修改内容"<<endl;
+			cout<<setw(23)<<" "<<"(或直接Enter跳过该项修改)：";
 		
 			Time temp;
 			int m;
@@ -110,6 +109,8 @@ class Rec{
             string n, ad, r;
 			Time bt, et;
 			
+			cin.clear();
+			cin.sync();
 			n = single_edit("主题", name);
 			ad = single_edit("地点", address);
 			r = single_edit("备注", remind);

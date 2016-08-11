@@ -160,8 +160,7 @@ void m_print(int m){
 				 <<order_arr1[i]<<endl<<endl;
 
 	cout<<setw(23)<<" "
-		<<setfill('_')<<setw(30)<<"_"
-		<<setfill(' ')<<endl;		
+		<<"───────────────"<<endl;
 		
 	cout<<setw(23)<<" "<<"注：按方向键移动选择，按Enter键确认操作"; 
 }
@@ -276,11 +275,13 @@ int user_get_order(int u_order){
 
 void print_title(const string place){
 	Time now_time;
-    cout<<left<<setw(40)<<">主页"+place
-    	<<right<<setw(40)<<now_time.print_time()+" "
+    cout<<left<<setw(60)<<">主页"+place
+    	<<right<<setw(19)<<now_time.print_time()+" "
 		<<endl
-    	<<setfill('-')<<setw(80)<<"-"
-		<<setfill(' ')
+    	<<"──────────"
+    	<<"──────────"
+    	<<"──────────"
+    	<<"──────────"
 		<<endl;
 }
 
