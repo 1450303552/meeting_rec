@@ -22,6 +22,7 @@ class Time{
 		Time();
 		Time(int,int,int,int,int);
 		string watch_time();
+		string day_time();
 		bool is_today();
 		string print_time();
 		void zero(){
@@ -61,13 +62,20 @@ string Time::watch_time(){
 	s<<right<<setfill('0')<<setw(2)<<hour<<':'<<setw(2)<<minute;
 	return s.str();
 }
+string Time::day_time(){
+	ostringstream s;
+	s<<year<<'/'<<month<<'/'<<day;
+	ostringstream ss;
+	ss<<left<<setw(10)<<s.str();
+	return ss.str();
+}
 bool Time::is_today(){
 	Time now;
 	return (now.year==year&&now.month==month&&now.day==day);
 }
 string Time::print_time(){
 	ostringstream s;
-	s<<right<<setw(4)<<year<<setfill('0')<<'/'<<setw(2)<<month<<'/'<<setw(2)<<day<<' ';
+	s<<year<<'/'<<month<<'/'<<day<<' ';
 	s<<right<<setfill('0')<<setw(2)<<hour<<':'<<setw(2)<<minute;//<<':'<<setw(2)<<t.second;
 	s<<setfill(' ');
 	return s.str();

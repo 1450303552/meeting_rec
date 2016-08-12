@@ -36,11 +36,13 @@ class User{
 			Time now_time;
 			ostringstream s;
 			s<<">主页>登录> "<<id<<" 个人主页"<<place;
-    		cout<<left<<setw(40)<<s.str()
-    			<<right<<setw(40)<<now_time.print_time()+" "
+    		cout<<left<<setw(60)<<s.str()
+    			<<right<<setw(19)<<now_time.print_time()+" "
 				<<endl
-				<<setfill('-')<<setw(80)<<"-"
-				<<setfill(' ')
+				<<"──────────"
+    			<<"──────────"
+    			<<"──────────"
+    			<<"──────────"
 				<<endl;
 		}
 		void set_ord(int ord){
@@ -72,7 +74,7 @@ class User{
 				//cout<<endl<<endl<<setw(23)<<" "
 				//	<<":今天没有会议，好好休息休息或者下班后去勾搭勾搭妹纸^3^！\n\n\n";
 				s<<endl<<endl<<setw(23)<<" "
-					<<"【今天没有会议，好好休息休息或者下班后去勾搭勾搭妹纸^3^！】\n";
+					<<"【今天没有会议，好好休息休息^3^！】\n";
 			}
 			else {
 				//cout<<endl<<endl<<setw(23)<<" "
@@ -280,19 +282,20 @@ class User{
 		void print_edit(int n, int mark){
 			print_title(">查看记录>编辑");
 
-			int wid=0, size=mark+1;
+			/*int wid=0, size=mark+1;
 			while(size) {
 				size /= 10;
 				wid++;
 			}
+			wid=((wid+1)/2)*2;
 			cout<<endl
 				<<" "<<setw(wid)<<"No"
 				<<left
 				<<" 记录状态 "
 				<<"    开始时间    ~    结束时间    "<<" "
 				<<setw(10)<<"主题"<<setw(10)<<"地点"<<setw(20)<<"备注"
-		 		<<right<<endl;
-			cout<<reclist[n]<<endl;
+		 		<<right<<endl;*/
+			//cout<<reclist[n]<<endl;
 
 			string order_arr1[]={"  |删除当前记录|  ", "    |修改记录|    ", "      |退出|      "};
 			string order_arr2[]={"|> 删除当前记录 <|", "  |> 修改记录 <|  ", "    |> 退出 <|    "};
@@ -362,6 +365,22 @@ class User{
 
 
 		}
+		string table_line(int w, string way){
+			ostringstream s;
+			s<<" ";
+			w/=2;
+			while(w--) s<<"─";
+			s<<way<<"───"
+			 <<way<<"─────"
+			 <<way<<"─────"
+			 <<way<<"─────"
+			 <<way<<"─────"
+			 <<way<<"───────"
+			 <<endl;
+
+			return s.str();
+
+		}
 		void search_rec(const string title, string key, Time b, Time e){
 			int num=1;
 			print_title(title);
@@ -372,26 +391,28 @@ class User{
 					size/=10;
 					wid++;
 				}
-				cout<<endl
-					<<" "<<setw(wid)<<"No"
-					<<left
-					<<" 记录状态 "
-					<<"    开始时间    ~    结束时间    "<<" "
-					<<setw(10)<<"主题"<<setw(10)<<"地点"<<setw(20)<<"备注"
-		 			<<right<<endl;
+				wid = ((wid+1)/2)*2;
+				
+				cout<<table_line(wid, "┬");
+				cout<<" "<<setw(wid)<<"No"
+					<<"│ 状态 │"
+					<<" 开始时间 │"<<" 结束时间 │"
+					<<"   主题   │"<<"   地点   │"<<"   备注   "
+		 			<<endl;
 
 				bool *mark = new bool[reclist.size()];
 				
 				for (vector<Rec>::iterator i = reclist.begin(); i!=reclist.end(); i++){
 					int n =i-reclist.begin();
 					if (i->match_key(key)&&i->match_time(b, e)){
-						cout<<" "<<setfill('0')<<setw(wid)<<n+1
-							<<setfill(' ')
-							<<" "<<*i<<endl;
-							mark[n] = true;
+						cout<<table_line(wid, "┼");
+						cout<<" "<<setw(wid)<<n+1;
+						i->print_table(wid);
+						mark[n] = true;
 					}
 					else mark[n]  = false;
 				}
+				cout<<table_line(wid, "┴");
 
 				cout<<endl<<setw(23)<<" "<<"请输入相应编号，编辑相应记录(输入0退出)：";
 				do{
@@ -404,7 +425,7 @@ class User{
 						while(cin.get()!='\n') continue;
 						cout<<setw(23)<<" "<<"检测到非法字符！请重新输入(0退出)：";
 					}
-				}while (num>=reclist.size()||num<0);
+				}while (num>reclist.size()||num<0);
 				if (num==0) return;
 			    else {
 					edit_rec(num-1);

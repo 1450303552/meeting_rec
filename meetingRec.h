@@ -7,7 +7,6 @@
 class Rec{
 	friend void initial();		//载入初始化数据 
 	friend void save_data(); 		//保存数据 
-	friend ostream &operator<<(ostream &output, Rec rec);
 	friend istream &operator>>(istream &input, Rec &rec);
 	friend bool operator<(Rec &, Rec &);
 	private:
@@ -90,6 +89,7 @@ class Rec{
 				temp+=c;
 				if (temp[0]==' ') temp = "";
 			}
+			cout<<endl;
 			if (temp=="") return data;
 			else return temp;
 		}
@@ -128,16 +128,87 @@ class Rec{
 			}
 			
 		}
+		void print_table(int w){
+			
+			cout<<left;
+			cout<<"│"<<situation<<"│"
+		  		<<begin_t.day_time()<<"│"<<end_t.day_time()<<"│";
+			int n=0, a=0, r=0;
+			ostringstream s;
+			//name前一段
+			for (n=0; n<name.size();){
+				if (name[n]>=0){
+					s<<name[n];
+					n++;
+				}
+				else{
+					s<<name[n]<<name[n+1];
+					n+=2;
+				}
+				if (n>=10) break;
+			}
+			cout<<setw(10)<<s.str();
+			cout<<"│";
+			s.str("");
+			//address前一段
+			for (a=0; a<address.size();){
+				if (address[a]>=0){
+					s<<address[a];
+					a++;
+				}
+				else{
+					s<<address[a]<<address[a+1];
+					a+=2;
+				}
+				if (a>=10) break;
+			}
+			cout<<setw(10)<<s.str();
+			cout<<"│";
+			s.str("");
+  		  //remind前一段
+			for (r=0; r<remind.size();){
+				if (remind[r]>=0){
+					s<<remind[r];
+					r++;
+				}
+				else{
+					s<<remind[r]<<remind[r+1];
+					r+=2;
+				}
+				if (r>=10) break;
+			}
+			cout<<setw(10)<<s.str();
+			cout<<endl;
+			s.str("");
+
+			//开始下一行
+			cout<<setw(w+1)<<"";
+			cout<<"│      │  "
+				  <<begin_t.watch_time()<<"   │  "<<end_t.watch_time()<<"   │";
+  			 //name后一段
+			for (; n<name.size();n++){
+				s<<name[n];
+			}
+			cout<<setw(10)<<s.str();
+			cout<<"│";
+			s.str("");
+			//address后一段
+			for (;a<address.size();a++){
+				s<<address[a];
+			}
+			cout<<setw(10)<<s.str();
+			cout<<"│";
+			s.str("");
+			//remind后一段
+			for (; r<remind.size();r++){
+				s<<remind[r];
+			}
+			cout<<setw(10)<<s.str();
+			cout<<endl;
+			cout<<right;
+		}
 };
 
-ostream &operator<<(ostream &output, Rec rec){
-	output<<left
-		  <<" ["<<rec.situation<<"] "
-		  <<rec.begin_t.print_time()<<"~"<<rec.end_t.print_time()<<" "
-		  <<setw(10)<<rec.name<<setw(10)<<rec.address<<setw(20)<<rec.remind
-		  <<right;
-	return output;
-}
 
 istream &operator>>(istream &input, Rec &rec){
 	input>>rec.name>>rec.address>>rec.begin_t>>rec.end_t>>rec.remind;
