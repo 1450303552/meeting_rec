@@ -35,7 +35,6 @@ void mSleep(long=1000);
 bool ensure();
 
 
-
 #include"user.h"		//包含全局变量userlist 
 
 int main(){
@@ -67,9 +66,10 @@ int main(){
 void initial(){		//#要加入判断读写异常的情况# 
 	ifstream infile;
 	infile.open("user_information.txt");
-	
 	if (infile.is_open()){
 		infile>>u_num;
+		cout<<"文件载入中…………\n";
+		int p=0;
 		for(int i = 0; i< u_num; i++){
 			string id, code;
 			int order, size;
@@ -85,10 +85,19 @@ void initial(){		//#要加入判断读写异常的情况#
 			}
 			
 			userlist.push_back(t);
+			//显示进度条
+			int pace = ((i+1.0)/u_num)*40;
+			if ((pace-p)>0){
+				for(int k = (pace-p); k>0; k--)
+					cout<<"■";
+				p = pace;
+			}
 		}
 		
 		infile.close();
 	}
+	else cout<<"不存在user_information.txt文件！";
+	system("cls");
 	
 }
 
@@ -181,7 +190,8 @@ void log_desk(){
 	int order;
 	if ((order=log_search(id, code))!=-1) user_desk(order);
 	else {
-		//#提示用户名密码错误 # 
+		cout<<endl<<setw(23)<<""<<"用户名或密码错误！";
+		mSleep();
 		return;
 	} 
 	
@@ -200,21 +210,39 @@ void register_desk(){
 	cout<<setw(30)<<" "<<"--=注册新用户 ^3^ =--"<<endl<<endl;
 	
 	string id, code;
-	
+	char c;
+	cout<<endl<<setw(23)<<""<<"用户名及密码不允许有空格！\n";
 	cout<<endl<<setw(23)<<" "<<"用户名: ";
-	cin>>id;
+	while((c=cin.get())!='\n'){
+		if (c==' ') {
+			cout<<endl<<setw(23)<<""<<"该用户名存有空格！";
+			mSleep();
+			return;
+		}
+		id+=c;
+	}
 	
 	cout<<endl<<setw(23)<<" "<<"密码："; 
-	cin>>code;
+	while((c=cin.get())!='\n'){
+		if (c==' ') {
+			cout<<endl<<setw(23)<<""<<"该密码存有空格！";
+			mSleep();
+			return;
+		}
+		code+=c;
+	}
 	
 	if (register_legal(id)){
 		User t_user(id, code);
 		t_user.set_ord(u_num);
 		u_num++;
 		userlist.push_back(t_user);
+		cout<<endl<<setw(23)<<""<<"注册成功！";
+		mSleep();
 	}
 	else {
-		//#显示用户名重复 # 
+		cout<<endl<<setw(23)<<""<<"用户名重复！";
+		mSleep();
 		return;
 	}
 	
@@ -275,8 +303,8 @@ int user_get_order(int u_order){
 
 void print_title(const string place){
 	Time now_time;
-    cout<<left<<setw(60)<<">主页"+place
-    	<<right<<setw(19)<<now_time.print_time()+" "
+    cout<<left<<setw(54)<<">主页"+place
+    	<<right<<setw(25)<<now_time.print_time()+" "+now_time.week()+" "
 		<<endl
     	<<"──────────"
     	<<"──────────"

@@ -31,6 +31,7 @@ class Time{
 		void max(){
 			year = 99999;
 		}
+		string week();
 		int user_input();
 		int get_year();
 		int get_month();
@@ -125,6 +126,32 @@ int Time::user_input(){
 			hour = data[3];
 		 	minute = data[4];
 		 	return 1;
+}
+string Time::week(){
+	int m = month;
+	int y = year;
+	int d = day;
+	int week = 0;
+	if(m==1){m=13;y--;}
+	if(m==2) {m=14;y--;}
+	
+	if((y<1752)||((y==1752)&&(m<9))||((y==1752)&&(m==9)&&(d<3))) //判断是否在1752年9月3日之前
+		week =(d+2*m+3*(m+1)/5+y+y/4+5)%7; //1752年9月3日之前的公式
+	else
+		week =(d+2*m+3*(m+1)/5+y+y/4-y/100+y/400)%7; //1752年9月3日之后的公式
+		
+	string weekstr="";
+	switch(week)
+	{
+		case 0: {weekstr="星期一"; break;}
+		case 1: {weekstr="星期二"; break;}
+		case 2: {weekstr="星期三"; break;}
+		case 3: {weekstr="星期四"; break;}
+		case 4: {weekstr="星期五"; break;}
+		case 5: {weekstr="星期六"; break;}
+		case 6: {weekstr="星期天"; break;}
+	}
+	return weekstr;
 }
 int Time::get_year(){
 	return year;

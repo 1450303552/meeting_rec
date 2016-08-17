@@ -31,13 +31,12 @@ class User{
 		}
 		~User(){
 		}
-		
 		void print_title(const string place=""){
 			Time now_time;
 			ostringstream s;
 			s<<">主页>登录> "<<id<<" 个人主页"<<place;
-    		cout<<left<<setw(60)<<s.str()
-    			<<right<<setw(19)<<now_time.print_time()+" "
+    		cout<<left<<setw(54)<<s.str()
+    			<<right<<setw(25)<<now_time.print_time()+" "+now_time.week()+" "
 				<<endl
 				<<"──────────"
     			<<"──────────"
@@ -282,20 +281,23 @@ class User{
 		void print_edit(int n, int mark){
 			print_title(">查看记录>编辑");
 
-			/*int wid=0, size=mark+1;
+			int wid=0, size=mark+1;
 			while(size) {
 				size /= 10;
 				wid++;
 			}
 			wid=((wid+1)/2)*2;
-			cout<<endl
-				<<" "<<setw(wid)<<"No"
-				<<left
-				<<" 记录状态 "
-				<<"    开始时间    ~    结束时间    "<<" "
-				<<setw(10)<<"主题"<<setw(10)<<"地点"<<setw(20)<<"备注"
-		 		<<right<<endl;*/
-			//cout<<reclist[n]<<endl;
+			cout<<table_line(wid, "┬");
+			cout<<" "<<setw(wid)<<"No"
+				<<"│ 状态 │"
+				<<" 开始时间 │"<<" 结束时间 │"
+				<<"   主题   │"<<"   地点   │"<<"   备注   "
+		 		<<endl;
+		 	cout<<table_line(wid, "┼");
+			cout<<" "<<setw(wid)<<n+1;
+			reclist[n].print_table(wid);
+			cout<<table_line(wid, "┴")<<endl;
+			
 
 			string order_arr1[]={"  |删除当前记录|  ", "    |修改记录|    ", "      |退出|      "};
 			string order_arr2[]={"|> 删除当前记录 <|", "  |> 修改记录 <|  ", "    |> 退出 <|    "};
@@ -383,8 +385,9 @@ class User{
 		}
 		void search_rec(const string title, string key, Time b, Time e){
 			int num=1;
-			print_title(title);
+			
 			while(num!=0){
+				print_title(title);
 				int size = reclist.size();
 				int wid=0;
 				while(size!=0){
